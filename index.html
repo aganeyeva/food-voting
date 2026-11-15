@@ -97,7 +97,7 @@
   <header>
     <div class="logo">🍽️</div>
     <h1>Ризыкларга тавыш бирәбез!</h1>
-    <div class="sub">Әти, Самира һәм Әмин — кем нәрсәне ярата?</div>
+    <div class="sub">Әти, Самира һәм Эмин — кем нәрсәне ярата?</div>
   </header>
 
   <div class="card" id="step-who">
@@ -123,7 +123,7 @@
             <th>🍲 Ризык</th>
             <th>👨 Әти</th>
             <th>👧 Самира</th>
-            <th>👦 Әмин</th>
+            <th>👦 Эмин</th>
             <th>👍 Ошады</th>
           </tr>
         </thead>
@@ -143,7 +143,7 @@
 const PEOPLE = [
   { name: "Әти", emoji: "👨", cls: "p-ati" },
   { name: "Самира", emoji: "👧", cls: "p-samira" },
-  { name: "Әмин", emoji: "👦", cls: "p-emin" },
+  { name: "Эмин", emoji: "👦", cls: "p-emin" },
 ];
 const MEALS = [
   { name: "Дөге", emoji: "🍚" },
@@ -160,6 +160,13 @@ const KEY = "foodVoting-v1";
 let current = null;
 let votes = {};
 try { votes = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { votes = {}; }
+// Иске «Әмин» тавышларын «Эмин»гә күчерү (исем үзгәртелде)
+Object.keys(votes).forEach(meal => {
+  if (votes[meal] && votes[meal]["Әмин"]) {
+    if (!votes[meal]["Эмин"]) votes[meal]["Эмин"] = votes[meal]["Әмин"];
+    delete votes[meal]["Әмин"];
+  }
+});
 
 function save() {
   localStorage.setItem(KEY, JSON.stringify(votes));
