@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="tt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Ризыкларга тавыш бирәбез! — Гаилә тавышы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    color: #4a3226;
+    background: linear-gradient(160deg, #fff6d9 0%, #ffe3b3 35%, #ffc9a8 70%, #ffb3a7 100%);
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 26px 20px 48px; }
+  header { text-align: center; }
+  header .logo { font-size: 54px; }
+  h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 900; margin: 6px 0 4px; }
+  .sub { font-size: 18px; font-weight: 700; opacity: .7; }
+  .card {
+    background: rgba(255,255,255,.88);
+    border-radius: 28px;
+    padding: 26px 22px;
+    box-shadow: 0 12px 32px rgba(180, 90, 40, .16);
+    margin-top: 22px;
+  }
+  h2 { text-align: center; font-size: clamp(22px, 3.6vw, 30px); font-weight: 800; margin: 0 0 6px; }
+  .hint { text-align: center; font-size: 17px; font-weight: 700; opacity: .65; margin: 0 0 20px; }
+  .people { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 560px) { .people { grid-template-columns: 1fr; } }
+  .person {
+    border: 4px solid transparent; border-radius: 24px; padding: 24px 10px 20px;
+    font-family: inherit; font-size: 26px; font-weight: 800; color: #4a3226;
+    cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px;
+    box-shadow: 0 6px 16px rgba(0,0,0,.10);
+    transition: transform .12s ease;
+  }
+  .person:active { transform: scale(.95); }
+  .person .ava { font-size: 56px; line-height: 1; }
+  .person .count { font-size: 15px; font-weight: 800; background: rgba(255,255,255,.9); border-radius: 999px; padding: 5px 14px; min-height: 28px; }
+  .person.selected { border-color: #ff9f43; outline: 3px solid #ffd93b; transform: scale(1.03); }
+  .person.p-ati { background: #bde0fe; }
+  .person.p-samira { background: #ffc8dd; }
+  .person.p-emin { background: #b7e4c7; }
+  .meals { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @media (max-width: 560px) { .meals { grid-template-columns: 1fr; } }
+  .meal {
+    background: #fff; border-radius: 24px; padding: 20px 16px;
+    box-shadow: 0 6px 16px rgba(0,0,0,.10);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .meal .emoji { font-size: 64px; line-height: 1; }
+  .meal .mname { font-size: 24px; font-weight: 800; text-align: center; }
+  .meal .mvote { font-size: 15px; font-weight: 800; min-height: 22px; opacity: .7; }
+  .votes { display: flex; gap: 12px; margin-top: 8px; width: 100%; }
+  .vote-btn {
+    flex: 1; border: 3px solid #eee; border-radius: 20px; padding: 16px 8px;
+    background: #fafafa; font-family: inherit; font-size: 22px; font-weight: 800;
+    color: #4a3226; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transition: transform .12s ease;
+  }
+  .vote-btn:active { transform: scale(.95); }
+  .vote-btn .thumb { font-size: 42px; line-height: 1; }
+  .vote-btn.up.on { background: #d8f3dc; border-color: #2d6a4f; }
+  .vote-btn.down.on { background: #ffe5d9; border-color: #c1121f; }
+  .vote-btn:disabled { opacity: .45; cursor: not-allowed; }
+  .progress { text-align: center; font-size: 18px; font-weight: 800; margin-top: 18px; background: #fff3cd; border-radius: 16px; padding: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 20px; font-weight: 800; min-width: 560px; }
+  th, td { padding: 14px 10px; text-align: center; border-bottom: 2px solid #f1e3d3; }
+  th { background: #fff3cd; }
+  th:first-child, td:first-child { text-align: left; }
+  td .cell-up { font-size: 28px; }
+  td .cell-down { font-size: 28px; }
+  td .cell-none { color: #bbb; font-size: 22px; }
+  .total { font-size: 22px; }
+  .nores { text-align: center; font-size: 18px; font-weight: 700; opacity: .65; padding: 8px 0; }
+  .clear-wrap { text-align: center; margin-top: 22px; }
+  .clear-btn {
+    border: none; background: none; font-family: inherit; font-size: 15px; font-weight: 700;
+    color: #a06a42; cursor: pointer; padding: 12px 20px; text-decoration: underline; opacity: .8;
+  }
+  .note { text-align: center; font-size: 15px; font-weight: 700; opacity: .55; margin-top: 22px; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🍽️</div>
+    <h1>Ризыкларга тавыш бирәбез!</h1>
+    <div class="sub">Әти, Самира һәм Әмин — кем нәрсәне ярата?</div>
+  </header>
+
+  <div class="card" id="step-who">
+    <h2>1. Кем тавыш бирә? 👆</h2>
+    <p class="hint">Үз исемеңә бас</p>
+    <div class="people" id="people"></div>
+  </div>
+
+  <div class="card" id="step-vote">
+    <h2 id="vote-title">2. Ризыкларны бәялә</h2>
+    <p class="hint" id="vote-hint">Башта кем икәнеңне сайла 👆</p>
+    <div class="meals" id="meals"></div>
+    <div class="progress hidden" id="progress"></div>
+  </div>
+
+  <div class="card" id="step-results">
+    <h2>3. Нәтиҗәләр 📊</h2>
+    <p class="hint">Ризык — кем нәрсә диде</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>🍲 Ризык</th>
+            <th>👨 Әти</th>
+            <th>👧 Самира</th>
+            <th>👦 Әмин</th>
+            <th>👍 Ошады</th>
+          </tr>
+        </thead>
+        <tbody id="results-body"></tbody>
+      </table>
+    </div>
+    <div class="nores hidden" id="nores">Әлегә беркем дә тавыш бирмәде — югарыдан башла! 😊</div>
+    <div class="clear-wrap">
+      <button class="clear-btn" id="clear-btn">Барлык тавышларны чистарту</button>
+    </div>
+  </div>
+
+  <p class="note">Тавышлар бары тик шушы планшетта саклана — беркайда да җибәрелми. 🔒</p>
+</div>
+
+<script>
+const PEOPLE = [
+  { name: "Әти", emoji: "👨", cls: "p-ati" },
+  { name: "Самира", emoji: "👧", cls: "p-samira" },
+  { name: "Әмин", emoji: "👦", cls: "p-emin" },
+];
+const MEALS = [
+  { name: "Дөге", emoji: "🍚" },
+  { name: "Карабодай", emoji: "🥣" },
+  { name: "Помидор һәм фета белән паста", emoji: "🍝" },
+  { name: "Макарон", emoji: "🍜" },
+  { name: "Терияки тавыгы", emoji: "🍗" },
+  { name: "Каймак соусында сёмга һәм креветкалар", emoji: "🍤" },
+  { name: "Тавык йөрәкләре", emoji: "🍖" },
+  { name: "Фрикаделькалы аш", emoji: "🍲" },
+];
+const KEY = "foodVoting-v1";
+
+let current = null;
+let votes = {};
+try { votes = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { votes = {}; }
+
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(votes));
+}
+
+function countFor(person) {
+  let n = 0;
+  MEALS.forEach(m => { if (votes[m.name] && votes[m.name][person]) n++; });
+  return n;
+}
+
+function renderPeople() {
+  const el = document.getElementById("people");
+  el.innerHTML = "";
+  PEOPLE.forEach(p => {
+    const b = document.createElement("button");
+    b.className = "person " + p.cls + (current === p.name ? " selected" : "");
+    b.innerHTML = '<span class="ava">' + p.emoji + '</span><span>' + p.name + '</span>' +
+      '<span class="count">' + countFor(p.name) + ' / ' + MEALS.length + ' тавыш</span>';
+    b.onclick = () => { current = p.name; renderAll(); };
+    el.appendChild(b);
+  });
+}
+
+function renderMeals() {
+  const el = document.getElementById("meals");
+  const title = document.getElementById("vote-title");
+  const hint = document.getElementById("vote-hint");
+  const progress = document.getElementById("progress");
+  el.innerHTML = "";
+  if (!current) {
+    title.textContent = "2. Ризыкларны бәялә";
+    hint.textContent = "Башта кем икәнеңне сайла 👆";
+    progress.classList.add("hidden");
+  } else {
+    title.textContent = "2. " + current + ", ризыкларны бәялә";
+    hint.textContent = "Ошаса — 👍, ошамаса — 👎. Фикереңне үзгәртсәң, икенче төймәгә бас.";
+    const done = countFor(current);
+    progress.classList.remove("hidden");
+    progress.textContent = done === MEALS.length
+      ? "🎉 " + current + ", син барлык ризыкларны бәяләдең! Рәхмәт!"
+      : current + ": " + done + " / " + MEALS.length + " ризык бәяләнде";
+  }
+  MEALS.forEach(m => {
+    const mine = current && votes[m.name] ? votes[m.name][current] : null;
+    const card = document.createElement("div");
+    card.className = "meal";
+    const label = mine === "up" ? "👍 Ошый!" : mine === "down" ? "👎 Ошамый" : "Әлегә бәяләнмәде";
+    card.innerHTML =
+      '<div class="emoji">' + m.emoji + '</div>' +
+      '<div class="mname">' + m.name + '</div>' +
+      '<div class="mvote">' + label + '</div>' +
+      '<div class="votes">' +
+        '<button class="vote-btn up' + (mine === "up" ? " on" : "") + '"' + (current ? "" : " disabled") + ' data-vote="up"><span class="thumb">👍</span><span>Ошый</span></button>' +
+        '<button class="vote-btn down' + (mine === "down" ? " on" : "") + '"' + (current ? "" : " disabled") + ' data-vote="down"><span class="thumb">👎</span><span>Ошамый</span></button>' +
+      '</div>';
+    card.querySelectorAll(".vote-btn").forEach(btn => {
+      btn.onclick = () => {
+        if (!current) return;
+        const v = btn.getAttribute("data-vote");
+        if (!votes[m.name]) votes[m.name] = {};
+        // Шул ук төймәгә кабат басу — тавышны алу
+        if (votes[m.name][current] === v) delete votes[m.name][current];
+        else votes[m.name][current] = v;
+        save();
+        renderAll();
+      };
+    });
+    el.appendChild(card);
+  });
+}
+
+function renderResults() {
+  const body = document.getElementById("results-body");
+  const nores = document.getElementById("nores");
+  body.innerHTML = "";
+  let any = false;
+  MEALS.forEach(m => {
+    const row = votes[m.name] || {};
+    let likes = 0;
+    PEOPLE.forEach(p => { if (row[p.name] === "up") likes++; });
+    if (Object.keys(row).length) any = true;
+    const tr = document.createElement("tr");
+    let cells = '<td>' + m.emoji + ' ' + m.name + '</td>';
+    PEOPLE.forEach(p => {
+      const v = row[p.name];
+      if (v === "up") cells += '<td><span class="cell-up">👍</span></td>';
+      else if (v === "down") cells += '<td><span class="cell-down">👎</span></td>';
+      else cells += '<td><span class="cell-none">—</span></td>';
+    });
+    cells += '<td class="total">' + likes + ' 👍</td>';
+    tr.innerHTML = cells;
+    body.appendChild(tr);
+  });
+  nores.classList.toggle("hidden", any);
+}
+
+function renderAll() {
+  renderPeople();
+  renderMeals();
+  renderResults();
+}
+
+document.getElementById("clear-btn").onclick = () => {
+  if (confirm("Барлык тавышларны чистартыйкмы? Бу гамәлне кире кайтарып булмый.")) {
+    votes = {};
+    save();
+    renderAll();
+  }
+};
+
+renderAll();
+</script>
+</body>
+</html>
